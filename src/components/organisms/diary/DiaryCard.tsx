@@ -32,7 +32,7 @@ export const DiaryCard: FC<Props> = memo((props) => {
           {subtitle}
         </Text>
         <Text fontSize="sm" color="gray">
-          {category}
+          カテゴリ：{category}
         </Text>
         <Text fontSize="sm" color="gray">
           {created_at}

@@ -52,16 +52,12 @@ export const CategoryList: FC = memo(() => {
   }, [newCategory, categories]);
 
   useEffect(() => {
-    const getCategories = () => {
-      axios
-        .get<Array<Category>>(targetURL)
-        .then((res) => {
-          setCategories(res.data);
-        })
-        .catch(() => alert('カテゴリが読み込めません'));
-    };
-
-    getCategories();
+    axios
+      .get<Array<Category>>(targetURL)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch(() => alert('カテゴリが読み込めません'));
   }, []);
 
   return (
