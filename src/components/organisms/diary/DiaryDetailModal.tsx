@@ -15,29 +15,29 @@ import remarkGfm from 'remark-gfm';
 import { Diary } from '../../../types/api/Diary';
 
 import 'github-markdown-css/github-markdown.css';
+import { Category } from '../../../types/api/Category';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   diary: Diary | null;
+  categories: Array<Category> | [];
   baseURL: string;
 };
 
 export const DiaryDetailModal: FC<Props> = (props) => {
-  const { isOpen, onClose, diary, baseURL } = props;
+  const { isOpen, onClose, diary, categories, baseURL } = props;
 
   const [title, setTitle] = useState('');
   const [subtitle, setSubTitle] = useState('');
   const [text, setText] = useState('');
   const [created_at, setCreated_at] = useState('');
-  const [category, setCategory] = useState('');
 
   useEffect(() => {
     setTitle(diary?.title ?? '');
     setSubTitle(diary?.subtitle ?? '');
     setText(diary?.text ?? '');
     setCreated_at(diary?.created_at ?? '');
-    setCategory(diary?.category ?? '');
   }, [diary]);
 
   return (
@@ -52,7 +52,10 @@ export const DiaryDetailModal: FC<Props> = (props) => {
           <Stack>
             <Box mb={10}>
               <Text color={'gray.500'}>{subtitle}</Text>
-              <Text color={'gray.500'}>カテゴリ：{category}</Text>
+              <Text color={'gray.500'}>
+                カテゴリ：
+                {categories.find((category) => category.id === Number(diary?.category) ?? 0)?.name}
+              </Text>
               <Text color={'gray.500'}>{created_at}</Text>
             </Box>
             <ReactMarkdown

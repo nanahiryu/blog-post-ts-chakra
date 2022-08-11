@@ -13,8 +13,8 @@ export const DiaryList: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { onSelectDiary, selectedDiary } = useSelectDiary();
 
-  const baseURL: string = 'https://nanahiryu.com/';
-  // const baseURL: string = 'http://localhost:8000/';
+  // const baseURL: string = 'https://nanahiryu.com/';
+  const baseURL: string = 'http://localhost:8000/';
 
   const targetDiaryURL: string = baseURL + 'blog_api/diary/';
   const targetCategoryURL: string = baseURL + 'blog_api/category/';
@@ -43,7 +43,7 @@ export const DiaryList: FC = memo(() => {
         setCategories(res.data);
       })
       .catch(() => alert('カテゴリが読み込めません'));
-  }, []);
+  }, [targetCategoryURL, targetDiaryURL]);
 
   return (
     <>
@@ -68,6 +68,7 @@ export const DiaryList: FC = memo(() => {
         isOpen={isOpen}
         onClose={onClose}
         diary={selectedDiary ?? null}
+        categories={categories}
         baseURL={baseURL}
       />
     </>
