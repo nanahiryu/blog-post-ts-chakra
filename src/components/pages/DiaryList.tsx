@@ -11,8 +11,10 @@ export const DiaryList: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { onSelectDiary, selectedDiary } = useSelectDiary();
 
-  const targetURL: string = 'https://nanahiryu.com/blog_api/diary/';
-  // const targetURL: string = 'http://localhost:8000/blog_api/diary/';
+  const baseURL: string = 'https://nanahiryu.com/';
+  // const baseURL: string = 'http://localhost:8000/';
+
+  const targetURL: string = baseURL + 'blog_api/diary/';
 
   const onClickDiary = useCallback(
     (id: number) => {
@@ -51,7 +53,12 @@ export const DiaryList: FC = memo(() => {
           </WrapItem>
         ))}
       </Wrap>
-      <DiaryDetailModal isOpen={isOpen} onClose={onClose} diary={selectedDiary ?? null} />
+      <DiaryDetailModal
+        isOpen={isOpen}
+        onClose={onClose}
+        diary={selectedDiary ?? null}
+        baseURL={baseURL}
+      />
     </>
   );
 });

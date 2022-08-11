@@ -8,9 +8,9 @@ export const Header: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
-  const onClickDiaryList = useCallback(() => navigate('/home/diary'), [navigate]);
-  const onClickCategoryList = useCallback(() => navigate('/home/category'), [navigate]);
-  const onClickDiaryPost = useCallback(() => navigate('/home'), [navigate]);
+  const onClickDiaryList = useCallback(() => navigate('/diary'), [navigate]);
+  const onClickCategoryList = useCallback(() => navigate('/category'), [navigate]);
+  const onClickDiaryPost = useCallback(() => navigate('/'), [navigate]);
 
   return (
     <>

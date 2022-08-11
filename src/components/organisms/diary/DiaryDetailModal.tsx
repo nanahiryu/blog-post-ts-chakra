@@ -20,10 +20,11 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   diary: Diary | null;
+  baseURL: string;
 };
 
 export const DiaryDetailModal: FC<Props> = (props) => {
-  const { isOpen, onClose, diary } = props;
+  const { isOpen, onClose, diary, baseURL } = props;
 
   const [title, setTitle] = useState('');
   const [subtitle, setSubTitle] = useState('');
@@ -54,7 +55,11 @@ export const DiaryDetailModal: FC<Props> = (props) => {
               <Text color={'gray.500'}>カテゴリ：{category}</Text>
               <Text color={'gray.500'}>{created_at}</Text>
             </Box>
-            <ReactMarkdown className="markdown-body" remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              className="markdown-body"
+              remarkPlugins={[remarkGfm]}
+              transformImageUri={(uri) => `${baseURL.slice(0, -1)}${uri}`}
+            >
               {text}
             </ReactMarkdown>
           </Stack>
