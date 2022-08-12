@@ -1,11 +1,22 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Box, Button, Input, Select, Stack, Text, Textarea, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  HStack,
+  Input,
+  Select,
+  Stack,
+  Text,
+  Textarea,
+  useDisclosure,
+} from '@chakra-ui/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import 'github-markdown-css/github-markdown.css';
 import axios from 'axios';
 import { Category } from '../../types/api/Category';
 import { SubmitDiaryConfirm } from '../organisms/diary/SubmitDiaryConfirm';
+import { CreateCategoryModal } from '../organisms/category/CreateCategoryModal';
 
 export const PostDiary: FC = () => {
   // const baseURL: string = 'https://nanahiryu.com/';
@@ -25,7 +36,22 @@ export const PostDiary: FC = () => {
     onOpen: onSubmitDiaryConfirmOpen,
     onClose: onSubmitDiaryConfirmClose,
   } = useDisclosure();
+  const {
+    isOpen: isCreateCategoryOpen,
+    onOpen: onCreateCategoryOpen,
+    onClose: onCreateCategoryClose,
+  } = useDisclosure();
+
   const [categories, setCategories] = useState<Array<Category>>([]);
+
+  const reloadCategories = useCallback((targetCategoryURL: string) => {
+    axios
+      .get<Array<Category>>(targetCategoryURL)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch(() => alert('カテゴリが読み込めません'));
+  }, []);
 
   const onClickSubmit = useCallback(
     (title: string, subtitle: string, text: string, category: number) => {
@@ -52,13 +78,8 @@ export const PostDiary: FC = () => {
   }, [newCategoryId, newSubTitle, newText, newTitle]);
 
   useEffect(() => {
-    axios
-      .get<Array<Category>>(targetCategoryURL)
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch(() => alert('カテゴリが読み込めません'));
-  }, [targetCategoryURL]);
+    reloadCategories(targetCategoryURL);
+  }, [reloadCategories, targetCategoryURL]);
 
   return (
     <Stack w="80%" mx="auto" my={4} spacing={4}>
@@ -71,12 +92,24 @@ export const PostDiary: FC = () => {
         <Input value={newSubTitle} onChange={(e) => setNewSubTitle(e.target.value)} />
       </Box>
       <Box>
-        <Select value={newCategoryId} onChange={(e) => setNewCategoryId(Number(e.target.value))}>
-          <option value={0}>カテゴリを選択</option>
-          {categories.map((category) => (
-            <option value={category.id}>{category.name}</option>
-          ))}
-        </Select>
+        <Text fontSize={24}>category</Text>
+        <HStack>
+          <Select
+            bgColor="white"
+            value={newCategoryId}
+            onChange={(e) => setNewCategoryId(Number(e.target.value))}
+          >
+            <option value={0}>カテゴリを選択</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </Select>
+          <Button colorScheme="teal" onClick={onCreateCategoryOpen}>
+            カテゴリを追加
+          </Button>
+        </HStack>
       </Box>
       <Text fontSize={24}>text</Text>
       <Box bgColor="white" minH={200} borderRadius={10}>
@@ -103,6 +136,15 @@ export const PostDiary: FC = () => {
           投稿
         </Button>
       </Box>
+      {/* createCategoryModal */}
+      <CreateCategoryModal
+        isOpen={isCreateCategoryOpen}
+        onClose={onCreateCategoryClose}
+        targetCategoryURL={targetCategoryURL}
+        reloadCategories={reloadCategories}
+      />
+
+      {/* submitDiaryModal */}
       <SubmitDiaryConfirm
         title={newTitle}
         subtitle={newSubTitle}

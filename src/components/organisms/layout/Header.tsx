@@ -30,7 +30,7 @@ export const Header: FC = memo(() => {
           onClick={onClickDiaryList}
         >
           <Heading as="h1" fontSize={{ base: 'md', md: 'lg' }}>
-            ブログ記事投稿アプリ
+            <Link onClick={onClickDiaryList}>Home</Link>
           </Heading>
         </Flex>
         <Flex align="center" fontSize="sm" flexGrow={2} display={{ base: 'none', md: 'flex' }}>

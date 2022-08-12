@@ -32,6 +32,8 @@ export const CategoryDetailModal: FC<Props> = (props) => {
     axios
       .put(`${targetURL}${category?.id}/`, { name: modifiedCategory })
       .then((res) => {
+        // alertの表示
+        alert(res.data);
         // 入力画面を空値に
         setModifiedCategory('');
         // Modal閉じる
@@ -42,18 +44,21 @@ export const CategoryDetailModal: FC<Props> = (props) => {
         tempCategory.name = modifiedCategory;
         categories[tempIndex] = tempCategory;
         setCategories(categories);
-        // alertの表示
-        alert(res.data);
       })
-      .catch((error) => alert(error + modifiedCategory));
+      .catch((error) => alert(error));
   }, [category?.id, modifiedCategory, targetURL, onClose, categories, setCategories]);
 
   const onClickDelete = useCallback(() => {
     axios
       .delete(`${targetURL}${category?.id}/`)
-      .then((res) => alert(res))
+      .then(() => {
+        alert(`カテゴリ：${category?.name}を削除しました`);
+        const tempCategories = categories.filter((c) => c.id !== category?.id);
+        setCategories(tempCategories);
+        onClose();
+      })
       .catch((error) => alert(error));
-  }, [category?.id, targetURL]);
+  }, [categories, category?.id, category?.name, onClose, setCategories, targetURL]);
 
   useEffect(() => {
     setName(category?.name ?? '');
