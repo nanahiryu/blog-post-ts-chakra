@@ -93,7 +93,7 @@ export const PostDiary: FC = () => {
       </Box>
       <Box>
         <Text fontSize={24}>category</Text>
-        <HStack>
+        <HStack mt="1rem">
           <Select
             bgColor="white"
             value={newCategoryId}
@@ -106,7 +106,7 @@ export const PostDiary: FC = () => {
               </option>
             ))}
           </Select>
-          <Button colorScheme="teal" onClick={onCreateCategoryOpen}>
+          <Button colorScheme="teal" onClick={onCreateCategoryOpen} minW="140px">
             カテゴリを追加
           </Button>
         </HStack>
