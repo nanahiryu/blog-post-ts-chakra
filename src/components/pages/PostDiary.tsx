@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -17,13 +17,13 @@ import axios from 'axios';
 import { Category } from '../../types/api/Category';
 import { SubmitDiaryConfirm } from '../organisms/diary/SubmitDiaryConfirm';
 import { CreateCategoryModal } from '../organisms/category/CreateCategoryModal';
+import { LoginUser } from '../../App';
 
 export const PostDiary: FC = () => {
-  // const baseURL: string = 'https://nanahiryu.com/';
-  const baseURL: string = 'http://localhost:8000/';
+  const { targetURL } = useContext(LoginUser);
 
-  const targetDiaryURL: string = baseURL + 'blog_api/diary/';
-  const targetCategoryURL: string = baseURL + 'blog_api/category/';
+  const targetDiaryURL: string = targetURL + 'blog_api/diary/';
+  const targetCategoryURL: string = targetURL + 'blog_api/category/';
 
   const [newText, setNewText] = useState('');
   const [newTitle, setNewTitle] = useState('');
@@ -153,7 +153,7 @@ export const PostDiary: FC = () => {
           categories.find((category) => Number(category.id) === newCategoryId)?.name ?? '該当なし'
         }
         text={newText}
-        baseURL={baseURL}
+        baseURL={targetURL}
         isOpen={isSubmitDiaryConfirmOpen}
         onClickSubmit={onClickSubmit}
         onClose={onSubmitDiaryConfirmClose}

@@ -1,6 +1,7 @@
 import { useDisclosure, Wrap, WrapItem } from '@chakra-ui/react';
 import axios from 'axios';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, memo, useCallback, useContext, useEffect, useState } from 'react';
+import { LoginUser } from '../../App';
 import { useSelectDiary } from '../../hooks/useSelectDiary';
 import { Category } from '../../types/api/Category';
 import { Diary } from '../../types/api/Diary';
@@ -13,11 +14,10 @@ export const DiaryList: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { onSelectDiary, selectedDiary } = useSelectDiary();
 
-  // const baseURL: string = 'https://nanahiryu.com/';
-  const baseURL: string = 'http://localhost:8000/';
+  const { targetURL } = useContext(LoginUser);
 
-  const targetDiaryURL: string = baseURL + 'blog_api/diary/';
-  const targetCategoryURL: string = baseURL + 'blog_api/category/';
+  const targetDiaryURL: string = targetURL + 'blog_api/diary/';
+  const targetCategoryURL: string = targetURL + 'blog_api/category/';
 
   const onClickDiary = useCallback(
     (id: number) => {
@@ -69,7 +69,7 @@ export const DiaryList: FC = memo(() => {
         onClose={onClose}
         diary={selectedDiary ?? null}
         categories={categories}
-        baseURL={baseURL}
+        baseURL={targetURL}
       />
     </>
   );

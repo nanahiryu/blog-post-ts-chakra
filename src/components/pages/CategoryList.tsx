@@ -9,17 +9,18 @@ import {
   Wrap,
   WrapItem,
 } from '@chakra-ui/react';
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, memo, useCallback, useContext, useEffect, useState } from 'react';
 import { CategoryCard } from '../organisms/category/CategoryCard';
 
 import { Category } from '../../types/api/Category';
 import axios from 'axios';
 import { CategoryDetailModal } from '../organisms/category/CategoryDetailModal';
 import { useSelectCategory } from '../../hooks/useSelectCategory';
+import { LoginUser } from '../../App';
 
 export const CategoryList: FC = memo(() => {
-  // const targetURL: string = 'https://nanahiryu.com/blog_api/category/';
-  const targetURL: string = 'http://localhost:8000/blog_api/category/';
+  const { targetURL } = useContext(LoginUser);
+  const targetURLCategory: string = targetURL + 'blog_api/category/';
 
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [newCategory, setNewCategory] = useState('');
@@ -40,7 +41,7 @@ export const CategoryList: FC = memo(() => {
 
   const onClickPostCategory = useCallback(() => {
     axios
-      .post(targetURL, { name: newCategory })
+      .post(targetURLCategory, { name: newCategory })
       .then((res) => {
         console.log(res.data);
         // 空値埋め
@@ -49,16 +50,16 @@ export const CategoryList: FC = memo(() => {
         setCategories([...categories, res.data]);
       })
       .catch((error) => console.log(error));
-  }, [newCategory, categories]);
+  }, [targetURLCategory, newCategory, categories]);
 
   useEffect(() => {
     axios
-      .get<Array<Category>>(targetURL)
+      .get<Array<Category>>(targetURLCategory)
       .then((res) => {
         setCategories(res.data);
       })
       .catch(() => alert('カテゴリが読み込めません'));
-  }, []);
+  }, [targetURLCategory]);
 
   return (
     <>
@@ -96,7 +97,7 @@ export const CategoryList: FC = memo(() => {
           isOpen={isOpen}
           onClose={onClose}
           category={selectedCategory!}
-          targetURL={targetURL}
+          targetURL={targetURLCategory}
           categories={categories ?? null}
           setCategories={setCategories}
         />

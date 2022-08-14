@@ -10,7 +10,7 @@ export const Header: FC = memo(() => {
 
   const onClickDiaryList = useCallback(() => navigate('/diary'), [navigate]);
   const onClickCategoryList = useCallback(() => navigate('/category'), [navigate]);
-  const onClickDiaryPost = useCallback(() => navigate('/'), [navigate]);
+  const onClickDiaryPost = useCallback(() => navigate('/post'), [navigate]);
 
   return (
     <>
