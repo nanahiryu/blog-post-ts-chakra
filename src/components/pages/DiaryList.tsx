@@ -8,11 +8,14 @@ import { Category } from '../../types/api/Category';
 import { Diary } from '../../types/api/Diary';
 import { DiaryCard } from '../organisms/diary/DiaryCard';
 import { DiaryDetailModal } from '../organisms/diary/DiaryDetailModal';
+import { DiaryEditModal } from '../organisms/diary/DiaryEditModal';
 
 export const DiaryList: FC = memo(() => {
+  const [newDiary, setNewDiary] = useState<Diary | null>();
   const [diaries, setDiaries] = useState<Array<Diary>>([]);
   const [categories, setCategories] = useState<Array<Category>>([]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenDetail, onOpen: onOpenDetail, onClose: onCloseDetail } = useDisclosure();
+  const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
   const { onSelectDiary, selectedDiary } = useSelectDiary();
   const navigate = useNavigate();
 
@@ -23,10 +26,10 @@ export const DiaryList: FC = memo(() => {
 
   const onClickDiary = useCallback(
     (id: number) => {
-      onSelectDiary({ id, diaries, onOpen });
-      onOpen();
+      onSelectDiary({ id, diaries, onOpenDetail });
+      onOpenDetail();
     },
-    [onOpen, onSelectDiary, diaries],
+    [onSelectDiary, diaries, onOpenDetail],
   );
 
   useEffect(() => {
@@ -73,11 +76,23 @@ export const DiaryList: FC = memo(() => {
         ))}
       </Wrap>
       <DiaryDetailModal
-        isOpen={isOpen}
-        onClose={onClose}
+        setNewDiary={setNewDiary}
+        onOpenEdit={onOpenEdit}
+        isOpen={isOpenDetail}
+        onClose={onCloseDetail}
         diary={selectedDiary ?? null}
+        diaries={diaries}
+        setDiaries={setDiaries}
         categories={categories}
         baseURL={targetURL}
+      />
+      <DiaryEditModal
+        newDiary={newDiary ?? null}
+        isOpen={isOpenEdit}
+        onClose={onCloseEdit}
+        setDiaries={setDiaries}
+        categories={categories}
+        targetDiaryURL={targetDiaryURL}
       />
     </>
   );
