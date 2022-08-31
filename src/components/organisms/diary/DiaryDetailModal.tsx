@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -66,6 +67,14 @@ export const DiaryDetailModal: FC<Props> = (props) => {
               {text}
             </ReactMarkdown>
           </Stack>
+          <Box textAlign="center" p={0}>
+            <Button mx={4} my={4} px={8} colorScheme="teal" onClick={() => console.log('putting')}>
+              変更
+            </Button>
+            <Button mx={4} my={4} px={8} colorScheme="red" onClick={() => console.log('deleting')}>
+              削除
+            </Button>
+          </Box>
         </ModalBody>
       </ModalContent>
     </Modal>
