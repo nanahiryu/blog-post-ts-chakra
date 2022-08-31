@@ -10,24 +10,27 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Diary } from '../../../types/api/Diary';
 
 import 'github-markdown-css/github-markdown.css';
 import { Category } from '../../../types/api/Category';
+import axios from 'axios';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   diary: Diary | null;
+  diaries: Array<Diary>;
+  setDiaries: (diaries: Array<Diary>) => void;
   categories: Array<Category> | [];
   baseURL: string;
 };
 
 export const DiaryDetailModal: FC<Props> = (props) => {
-  const { isOpen, onClose, diary, categories, baseURL } = props;
+  const { isOpen, onClose, diary, diaries, setDiaries, categories, baseURL } = props;
 
   const [title, setTitle] = useState('');
   const [subtitle, setSubTitle] = useState('');
@@ -40,6 +43,18 @@ export const DiaryDetailModal: FC<Props> = (props) => {
     setText(diary?.text ?? '');
     setCreated_at(diary?.created_at ?? '');
   }, [diary]);
+
+  const onClickDeletediary = useCallback(() => {
+    axios
+      .delete(`${baseURL + 'blog_api/diary/'}${diary?.id}/`)
+      .then(() => {
+        alert(`記事：${diary?.title}を削除しました`);
+        const tempDiaries = diaries.filter((c) => c.id !== diary?.id);
+        setDiaries(tempDiaries);
+        onClose();
+      })
+      .catch((error) => alert(error));
+  }, [baseURL, diaries, diary?.id, diary?.title, onClose, setDiaries]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
@@ -69,9 +84,9 @@ export const DiaryDetailModal: FC<Props> = (props) => {
           </Stack>
           <Box textAlign="center" p={0}>
             <Button mx={4} my={4} px={8} colorScheme="teal" onClick={() => console.log('putting')}>
-              変更
+              編集
             </Button>
-            <Button mx={4} my={4} px={8} colorScheme="red" onClick={() => console.log('deleting')}>
+            <Button mx={4} my={4} px={8} colorScheme="red" onClick={onClickDeletediary}>
               削除
             </Button>
           </Box>
